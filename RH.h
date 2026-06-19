@@ -45,3 +45,37 @@
  * 5.1. Tamanho total do registro em bytes (para uso nos callbacks).
  * 5.2. Macros para acessar campos com facilidade.
  */
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct funcionario {
+    char* nome;
+    dataNascimento dataNasc;
+    char* filiacao;
+    dadosContato contato;
+    float historicoPagamentos[12];
+} funcionario;
+
+typedef struct dataNascimento {
+    int dia;
+    int mes;
+    int ano;
+} dataNascimento;
+
+typedef struct dadosContato {
+    char* endereco;
+    char* telefone;
+} dadosContato;
+
+funcionario*criarPessoa(char* nome, int dia, int mes, int ano, char* filiacao, char* endereco, char* telefone) {
+    funcionario* novaPessoa = (funcionario*)malloc(sizeof(funcionario));
+    novaPessoa->nome = nome;
+    novaPessoa->dataNasc.dia = dia;
+    novaPessoa->dataNasc.mes = mes;
+    novaPessoa->dataNasc.ano = ano;
+    novaPessoa->filiacao = filiacao;
+    novaPessoa->contato.endereco = endereco;
+    novaPessoa->contato.telefone = telefone;
+    return novaPessoa;
+}
