@@ -59,3 +59,39 @@
  * 5.3. Redistribuir ou concatenar (merge) nós na remoção
  * 5.4. Atualizar cabeçalho do arquivo
  */
+
+#define ORDEM 255
+#define TAMANHO_PAGINA 4096
+#include <stdbool.h>
+
+
+// rid funciona como um ponteiro de memoria em disco, se um dado esta armazenado no bite n do arquivo, o rid é n
+// Se o dado não existe, o rid é -1
+typedef struct noBPlus {
+    bool ehfolha;
+    int numChaves;
+    char chaves[ORDEM - 1];
+    long rids[ORDEM]; // RIDs dos filhos 
+    long proximaFolha;   // Apenas para folhas: Tem que ser long e não void* para armazenar o RID do próximo nó folha
+} noBPlus;
+
+typedef struct noBPlusinterno{
+    bool ehfolha;
+    int numChaves;
+    char chaves[ORDEM - 1]; //chaves de indentificação "chavescompostas"
+    long rids[ORDEM];
+} noBPlusinterno;
+
+typedef struct {
+    long raiz_rid;          // Onde a raiz da árvore está no arquivo (RID)
+
+    long topo_lista_livre;  // Ponteiro para reuso de nós deletados (isso o GPT que fez, funciona como uma lista emcadeada
+                            // é uma lista encadeada de nós livres, cada nó livre tem um ponteiro para o próximo nó livre)
+   
+    int tamanho_chave;      // Configurado na inicialização (ex: sizeof(ChaveComposta))
+    int tamanho_dado;       // Configurado na inicialização (ex: sizeof(Funcionario))
+} CabecalhoArquivo;
+
+void criaArvoreBMais(char* nomeArquivo, size_t tamanhoChave, size_t tamanhoDado);
+int lerPagina(FILE* arquivo, long rid, noBPlus *buffer_no);
+int escreverPagina(FILE* arquivo, long rid, const noBPlus *no);
