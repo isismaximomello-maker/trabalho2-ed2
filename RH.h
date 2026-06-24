@@ -67,8 +67,7 @@
 
 typedef struct funcionario {
     chaveComposta chave;
-    char mae[100];
-    char pai[100];
+    afiliacao filiacao ;
     dadosContato contato;
     float historicoPagamentos[12];
     dadosContratuais contrato;
@@ -86,6 +85,11 @@ typedef struct dadosContato {
     char telefone[20];
 } dadosContato;
 
+typedef struct afiliacao{
+    char mae [100];
+    char pai [100];
+
+}afiliacao;
 
 typedef struct dadosContratuais{
     data dataContrato;

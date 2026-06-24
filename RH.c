@@ -47,7 +47,7 @@
  * ------------------------------------------------------------
  * 4.1. Seguir fluxo de busca (item 3) para encontrar o registro exato.
  * 4.2. Exibir dados cadastrais (sem histórico) e pedir confirmação (S/N).
- * 4.3. Se confirmado: chamar bplus_delete() com a chave composta.
+ * 4.3. Se confirmado: chamar bpl us_delete() com a chave composta.
  * 4.4. Remover também o dado do arquivo de dados (ou marcar como inativo).
  * 
  * ------------------------------------------------------------
@@ -82,8 +82,8 @@ funcionario* criarPessoa(char* nome, int dia, int mes, int ano, char* mae, char*
     novaPessoa->chave.dataNascimento.ano = ano;
     
     // mae pai
-    strcpy(novaPessoa->mae, mae);
-    strcpy(novaPessoa->pai, pai);
+    strcpy(novaPessoa->filiacao.mae, mae);
+    strcpy(novaPessoa->filiacao.pai, pai);
     
     // contato
     strcpy(novaPessoa->contato.endereco, endereco);
@@ -97,15 +97,20 @@ funcionario* criarPessoa(char* nome, int dia, int mes, int ano, char* mae, char*
     novaPessoa->contrato.dataDesligamento.dia = 0;
     novaPessoa->contrato.dataDesligamento.mes = 0;
     novaPessoa->contrato.dataDesligamento.ano = 0;
-    
+
+    //zera os pagamentos;
+    for (int i = 0; i < 12; i++) {
+        novaPessoa->historicoPagamentos[i] = 0.0;
+    }
+
     
     return novaPessoa;
 }
 
 //calbacks
 int comparar_chave(const void*a, const void*b){
-    chaveComposta *chave1 = (chaveComposta *)a;
-    chaveComposta *chave2 = (chaveComposta *)b;
+    const chaveComposta *chave1 = (const chaveComposta *)a;
+    const chaveComposta *chave2 = (const chaveComposta *)b;
 
     int compararNome = strcmp(chave1->nome,chave2->nome);
     if (compararNome != 0) return compararNome;
@@ -129,7 +134,7 @@ size_t tamanho_chave(const void* chave) {
     return sizeof(chaveComposta);
 }
 
-void escrever_chave(const void* chave, const void* buffer) {
+void escrever_chave(const void* chave, void* buffer) {
     memcpy(buffer, chave, sizeof(chaveComposta));
 }
 
@@ -137,13 +142,132 @@ void ler_chave(void* destino, const void* buffer) {
     memcpy(destino, buffer, sizeof(chaveComposta));
 }
 
-//serializacao funcionario
+//precisa??
+// //serializacao funcionario
 
-void serializar_funcionario(const funcionario* f, void* buffer) {
-    memcpy(buffer, f, sizeof(funcionario));
+// void serializar_funcionario(const funcionario* f, void* buffer) {
+//     memcpy(buffer, f, sizeof(funcionario));
+// }
+
+// //desserializacao funcionario
+// void desserializar_funcionario(funcionario* f, const void* buffer) {
+//     memcpy(f, buffer, sizeof(funcionario));
+// }
+
+
+
+
+
+//CONTINUAR DAQUIIIIIIIIIIIIII
+
+
+
+int salvar_funcionario(const funcionario* f, long* offset) {
+    FILE* arquivo = fopen("funcionarios.dat", "a+b");
+    if (arquivo == NULL) {
+        arquivo = fopen("funcionarios.dat", "w+b");
+        if (arquivo == NULL) {
+            printf("Erro ao criar arquivo.\n");
+            return 0;
+        }
+    }
+    
+    fseek(arquivo, 0, SEEK_END);
+    *offset = ftell(arquivo);
+    
+    size_t escrito = fwrite(f, sizeof(funcionario), 1, arquivo);
+    fclose(arquivo);
+    
+    return (escrito == 1);
 }
 
-//desserializacao funcionario
-void desserializar_funcionario(funcionario* f, const void* buffer) {
-    memcpy(f, buffer, sizeof(funcionario));
+
+void rh_inserir_funcionario() {
+    char nome[100], mae[100], pai[100], endereco[200], telefone[20];
+    data dataNasc;
+    data dataCont;
+    long offset;
+    int encontrado;
+    funcionario* novo;
+    chaveComposta chave;
+    
+    printf("  INSERIR NOVO FUNCIONARIO\n");
+
+    // 1. NOME
+    printf("Nome: ");
+    fgets(nome, 100, stdin);
+    nome[strcspn(nome, "\n")] = '\0' ;//coloca o \0 no final
+    
+    // 2. DATA NASCIMENTO
+    printf("Data de Nascimento (dd/mm/aaaa): ");
+    scanf("%d/%d/%d", &dataNasc.dia, &dataNasc.mes, &dataNasc.ano);
+    getchar();
+
+    // PRECISA DE FUNCOES AINDA NAO IMPLEMENTADAS, APENAS TESTE DE ESTRUTURA
+    strcpy(chave.nome, nome);
+    chave.dataNascimento = dataNasc;
+
+    encontrado = bplus_procura(&chave);
+
+    if (encontrado != -1) {
+        printf("\n Funcionario ja cadastrado com esta data!\n");
+        //chamar para atualizar funcionario;
+        return;
+    }
+
+    
+    // 3. MAE
+    printf("Nome da Mae: ");
+    fgets(mae, 100, stdin);
+    mae[strcspn(mae, "\n")] = '\0';
+    
+    // 4. PAI
+    printf("Nome do Pai: ");
+    fgets(pai, 100, stdin);
+    pai[strcspn(pai, "\n")] = '\0';
+    
+    // 5. ENDERECO
+    printf("Endereco: ");
+    fgets(endereco, 200, stdin);
+    endereco[strcspn(endereco, "\n")] = '\0';
+    
+    // 6. TELEFONE
+    printf("Telefone: ");
+    fgets(telefone, 20, stdin);
+    telefone[strcspn(telefone, "\n")] = '\0';
+    
+    // 7. DATA CONTRATACAO
+    printf("Data de Contratacao (dd/mm/aaaa): ");
+    scanf("%d/%d/%d", &dataCont.dia, &dataCont.mes, &dataCont.ano);
+    getchar();
+    
+    // 8. CRIAR FUNCIONARIO (usando dataNasc, não dataCont!)
+    novo = criarPessoa(nome, dataNasc.dia, dataNasc.mes, dataNasc.ano, mae, pai, endereco, telefone);
+    
+    
+    // 9. PREENCHER DADOS CONTRATUAIS
+    novo->contrato.dataContrato = dataCont;
+    novo->contrato.status = true ;
+    novo->contrato.dataDesligamento.dia = 0;
+    novo->contrato.dataDesligamento.mes = 0;
+    novo->contrato.dataDesligamento.ano = 0;
+    
+    // 10. SALVAR NO ARQUIVO
+    if (!salvar_funcionario(novo, &offset)) {
+        printf("Erro ao salvar funcionario.\n");
+        free(novo);
+        return;
+    }
+    
+    // 11. CONFIRMAR
+    printf("\nFuncionario inserido com SUCESSO!\n");
+    printf("   Offset: %ld\n", offset);
+    
+    //fazer imprime funcionario? 
+
+    free(novo);
 }
+
+
+
+
