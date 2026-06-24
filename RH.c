@@ -31,7 +31,7 @@
  * 2.3. Se existir: exibir dados atuais e perguntar se quer atualizar.
  * 2.4. Se não existir: solicitar demais campos, inicializar pagamentos vazio.
  * 2.5. Montar a struct Funcionario e inserir na B+ (chave + RID do dado).
- * 2.6. O RID do dado pode ser o próprio offset do arquivo de dados (ou nó folha).
+ * 2.6. O RID do dado pode ser o próprio posicao do arquivo de dados (ou nó folha).
  * 
  * ------------------------------------------------------------
  * PASSO 3 – FUNÇÃO DE BUSCAR FUNCIONÁRIO (COM DESEMPATE)
@@ -113,7 +113,7 @@ int comparar_chave(const void*a, const void*b){
     const chaveComposta *chave2 = (const chaveComposta *)b;
 
     int compararNome = strcmp(chave1->nome,chave2->nome);
-    if (compararNome != 0) return compararNome;
+    if (compararNome != 0) return 2;
 
 
     if (chave1->dataNascimento.ano != chave2->dataNascimento.ano) {
@@ -162,18 +162,16 @@ void ler_chave(void* destino, const void* buffer) {
 
 
 
-int salvar_funcionario(const funcionario* f, long* offset) {
+int salvar_funcionario(const funcionario* f, long* posicao) {
     FILE* arquivo = fopen("funcionarios.dat", "a+b");
     if (arquivo == NULL) {
-        arquivo = fopen("funcionarios.dat", "w+b");
-        if (arquivo == NULL) {
-            printf("Erro ao criar arquivo.\n");
-            return 0;
-        }
+        printf("Erro ao criar arquivo.\n");
+        return 0;
     }
+
     
     fseek(arquivo, 0, SEEK_END);
-    *offset = ftell(arquivo);
+    *posicao = ftell(arquivo);
     
     size_t escrito = fwrite(f, sizeof(funcionario), 1, arquivo);
     fclose(arquivo);
@@ -186,7 +184,7 @@ void rh_inserir_funcionario() {
     char nome[100], mae[100], pai[100], endereco[200], telefone[20];
     data dataNasc;
     data dataCont;
-    long offset;
+    long posicao;
     int encontrado;
     funcionario* novo;
     chaveComposta chave;
@@ -253,7 +251,7 @@ void rh_inserir_funcionario() {
     novo->contrato.dataDesligamento.ano = 0;
     
     // 10. SALVAR NO ARQUIVO
-    if (!salvar_funcionario(novo, &offset)) {
+    if (!salvar_funcionario(novo, &posicao)) {
         printf("Erro ao salvar funcionario.\n");
         free(novo);
         return;
@@ -261,7 +259,7 @@ void rh_inserir_funcionario() {
     
     // 11. CONFIRMAR
     printf("\nFuncionario inserido com SUCESSO!\n");
-    printf("   Offset: %ld\n", offset);
+    printf("   posicao: %ld\n", posicao);
     
     //fazer imprime funcionario? 
 
