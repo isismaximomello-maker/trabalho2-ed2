@@ -1,5 +1,6 @@
+#ifndef Bplus_H
+
 #define ORDEM 4
-#include <stdbool.h>
 
 typedef struct {
     char valor[100];
@@ -41,3 +42,5 @@ int buscarChave(Chave chave, int *indexPagina);
 void inserirChave(Chave chave, int enderecoRegistro);
 void deletarChave(Chave chave);
 void imprimirChavesIntervalo(Chave inicial, Chave final);
+
+#endif
