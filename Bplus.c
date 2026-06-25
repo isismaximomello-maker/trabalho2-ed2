@@ -11,6 +11,7 @@ void removerElemento(Pagina *p, Chave chave);
 void verificarOverflow(Pagina *p);
 void verificarUnderflow(Pagina *p);
 void ordenarPaginaFolha(Pagina *p);
+int buscarPaginaLivre();
 
 // funções para a árvore
 void inicializarArvore();

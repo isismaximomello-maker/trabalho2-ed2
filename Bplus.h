@@ -17,14 +17,6 @@ typedef struct Pagina{
     int foiDeletada; //marcador lógico
 } Pagina;
 
-typedef struct{
-    long raiz_rid;          // Onde a raiz da árvore está no arquivo (RID)
-    long topo_lista_livre;  // Ponteiro para reuso de nós deletados (isso o GPT que fez, funciona como uma lista emcadeada
-                            // é uma lista encadeada de nós livres, cada nó livre tem um ponteiro para o próximo nó livre
-    int tamanho_Chave;      // Configurado na inicialização (ex: sizeof(Chave))
-    int tamanho_dado;       // Configurado na inicialização (ex: sizeof(Funcionario))
-} CabecalhoArquivo;
-
 // funções para a página
 Pagina *criaPagina();
 void inicializarPagina(Pagina *pagina, int indice, int tipo);
@@ -34,6 +26,7 @@ void removerElemento(Pagina *p, Chave chave);
 void verificarOverflow(Pagina *p);
 void verificarUnderflow(Pagina *p);
 void ordenarPaginaFolha(Pagina *p);
+int buscarPaginaLivre();
 
 // funções para a árvore
 void inicializarArvore();
