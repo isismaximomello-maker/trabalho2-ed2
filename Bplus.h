@@ -18,22 +18,22 @@ typedef struct Pagina{
 } Pagina;
 
 // funções para a página
-Pagina *criaPagina();
-void inicializarPagina(Pagina *pagina, int indice, int tipo);
-void destroiPagina(Pagina *p);
-void inserirElemento(Pagina *p, Chave chave);
-void removerElemento(Pagina *p, Chave chave);
-void verificarOverflow(Pagina *p);
-void verificarUnderflow(Pagina *p);
-void ordenarPaginaFolha(Pagina *p);
-int buscarPaginaLivre();
+Pagina *criaPagina(); // eduardo
+void inicializarPagina(Pagina *pagina, int indice, int tipo); // eduardo
+void destroiPagina(Pagina *p); // eduardo
+void inserirElemento(Pagina *p, Chave chave); // eduardo
+void removerElemento(Pagina *p, Chave chave); // isis
+void verificarOverflow(Pagina *p); // eduardo
+void verificarUnderflow(Pagina *p); // isis
+void ordenarPaginaFolha(Pagina *p); // eduardo
+int buscarPaginaLivre(); // isis
 
 // funções para a árvore
-void inicializarArvore();
+void inicializarArvore(); // eduardo
 void imprimirArvore();
-int buscarChave(Chave chave, int *indexPagina);
-void inserirChave(Chave chave, int enderecoRegistro);
-void deletarChave(Chave chave);
+int buscarChave(Chave chave, int *indexPagina); // isis
+void inserirChave(Chave chave, int enderecoRegistro); // isis
+void deletarChave(Chave chave); // isis
 void imprimirChavesIntervalo(Chave inicial, Chave final);
 
 #endif
