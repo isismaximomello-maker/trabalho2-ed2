@@ -73,14 +73,8 @@ typedef struct noBPlus {
     char chaves[ORDEM - 1];
     long rids[ORDEM]; // RIDs dos filhos 
     long proximaFolha;   // Apenas para folhas: Tem que ser long e não void* para armazenar o RID do próximo nó folha
+    int foiDeletado;
 } noBPlus;
-
-typedef struct noBPlusinterno{
-    bool ehfolha;
-    int numChaves;
-    char chaves[ORDEM - 1]; //chaves de indentificação "chavescompostas"
-    long rids[ORDEM];
-} noBPlusinterno;
 
 typedef struct {
     long raiz_rid;          // Onde a raiz da árvore está no arquivo (RID)
