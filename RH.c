@@ -113,7 +113,7 @@ int comparar_chave(const void*a, const void*b){
     const chaveComposta *chave2 = (const chaveComposta *)b;
 
     int compararNome = strcmp(chave1->nome,chave2->nome);
-    if (compararNome != 0) return 2;
+    if (compararNome != 0) return compararNome; 
 
 
     if (chave1->dataNascimento.ano != chave2->dataNascimento.ano) {
