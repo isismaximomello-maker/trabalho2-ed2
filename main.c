@@ -93,7 +93,7 @@ int main(){
             return false;
             
             default:
-                print("Opção indisponivel\n");
+                printf("Opção indisponivel\n");
 
         }
     }while(true);

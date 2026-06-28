@@ -63,7 +63,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
+
 
 typedef struct funcionario {
     chaveComposta chave;
@@ -93,7 +93,7 @@ typedef struct afiliacao{
 
 typedef struct dadosContratuais{
     data dataContrato;
-    bool status;
+    int status;
     data dataDesligamento;
 
 }dadosContratuais;
