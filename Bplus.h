@@ -8,7 +8,7 @@ typedef struct {
 } Cabecalho;
 
 typedef struct Pagina{
-    void *chave[ORDEM + 1];
+    unsigned char chave[ORDEM + 1][100];
     int filho[ORDEM + 2];
     int pai; //pai do vetor de Chave
     int indice; //endereço da página
@@ -23,18 +23,18 @@ Pagina *criaPagina(); // eduardo
 void inicializarPagina(Pagina *pagina, int indice, int tipo); // eduardo
 void destroiPagina(Pagina *p); // eduardo
 void inserirElemento(Pagina *p, const void *chave); // eduardo
-void removerElemento(Pagina *p, const void *chave); // isis
+void removerElemento(Pagina *p, const void *chave, int (*comparar)(const void*, const void*));
 void verificarOverflow(Pagina *p); // eduardo
-void verificarUnderflow(Pagina *p); // isis
+void verificarUnderflow(FILE *arquivo, Pagina *pagina);
 void ordenarPaginaFolha(Pagina *p); // eduardo
-int buscarPaginaLivre(); // isis
+int buscarPaginaLivre();
 
 // funções para a árvore
-void inicializarArvore(char* nomeArquivo, int ordem, int tamChave, int (*comparar)(const void*, const void*)); // eduardo
+void inicializarArvore(char* nomeArquivo, int ordem, int tamChave, int (*comparar)(const void*, const void*));
 void imprimirArvore();
-int buscarChave(const void *chave, int (*comparar)(const void*, const void*)); // isis
-void inserirChave(const void *chave, int resgistro); // isis
-void deletarChave(const void *chave); // isis
+int buscarChave(const void *chave, int (*comparar)(const void*, const void*));
+void inserirChave(const void *chave, int resgistro);
+void deletarChave(const void *chave);
 void imprimirChavesIntervalo(const void *chave_min, const void *chave_max);
 
 #endif
