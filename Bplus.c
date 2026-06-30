@@ -504,6 +504,83 @@ int buscarChaveNaArvore(const void* chave, int *enderecoRegistro, int (*comparar
     return -1;
 }
 
+int* buscarChavesIntervalo(const void *chaveMin, const void *chaveMax, int *qtEncontrados, int (*comparar)(const void*, const void*)){
+        FILE *arquivo = fopen(arquivoArvore, "rb");
+
+    //verifica se abriu
+    if (arquivo == NULL)
+        return NULL;
+
+    //le cabeçalho
+
+    Cabecalho header;
+
+    if (fread(&header, sizeof(Cabecalho), 1, arquivo) != 1){
+        fclose(arquivo);
+        return NULL;
+    }
+
+    //verifica se a árvore existe
+    if (header.raiz == -1){
+        fclose(arquivo);
+        return NULL;
+    }
+
+    //Encontra a folha onde chaveMin estaria
+    Pagina pagina = buscarFolha(arquivo, &header, chaveMin, comparar);
+
+    //aloca vetor com um tamanho inicial, se precisar de mais realloca
+    int capacidade = 10;
+    int *enderecos = (int*) malloc(capacidade * sizeof(int));
+    *qtEncontrados = 0;
+
+    bool terminou = false;
+
+    while (!terminou){
+
+        //percorre as chaves na folha
+        for (int i = 0; i < pagina.qtElementos; i++){
+
+            //se a chave encontrada for maior que a máxima, encerra pois já terminou o intervalo
+            if (comparar(pagina.chave[i], chaveMax) > 0){
+                terminou = true;
+                break;
+            }
+
+            //se está no intervalo, compara com a minima
+            if (comparar(pagina.chave[i], chaveMin) >= 0){
+                //se a chave a página estiver entro do intervalo (chaveMin, chaveMax)
+
+                //verifica se o vetor tem espaço suficiente
+                if (*qtEncontrados == capacidade){
+                    capacidade *= 2;
+                    enderecos = (int*) realloc(enderecos, capacidade * sizeof(int));
+                }
+
+                //salva endereço no vetor e incrementa contador
+                enderecos[*qtEncontrados] = pagina.filho[i];
+                (*qtEncontrados)++;
+            }
+        }
+
+        if (terminou)
+            break;
+
+        //acabou a última folha?
+        if (pagina.proximaFolha == -1)
+            break;
+
+        // carrega a próxima folha
+        fseek(arquivo, sizeof(Cabecalho) + pagina.proximaFolha * sizeof(Pagina), SEEK_SET);
+        fread(&pagina, sizeof(Pagina), 1, arquivo);
+    }
+
+    fclose(arquivo);
+
+    return enderecos;
+
+}
+
 void inserirChaveNaArvore(const void *chave, int enderecoRegistro, size_t tamanhoChave, int (*comparar)(const void *, const void *)){
 
     FILE *arquivo = fopen(arquivoArvore, "rb+");

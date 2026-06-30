@@ -1,6 +1,7 @@
 #ifndef Bplus_H
 
 #define ORDEM 4
+#include <stdbool.h>
 
 typedef struct {
     int ordem, qtdPaginas, raiz; //raiz recebe -1 na criação do cabeçalho == VAZIA
@@ -35,6 +36,6 @@ void imprimirArvore();
 int buscarChave(const void *chave, int (*comparar)(const void*, const void*));
 void inserirChave(const void *chave, int resgistro);
 void deletarChave(const void *chave);
-void imprimirChavesIntervalo(const void *chave_min, const void *chave_max);
+int* buscarChavesIntervalo(const void *chave_min, const void *chave_max, int *qtEncontrados, int (*comparar)(const void*, const void*));
 
 #endif

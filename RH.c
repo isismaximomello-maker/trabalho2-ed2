@@ -47,7 +47,7 @@ funcionario* criar_funcionario(char* nome, int dia, int mes, int ano, char* mae,
 }
 
 //calbacks
-int comparar_chave(const void*a, const void*b){
+int compararPorChaveComposta(const void*a, const void*b){
     const chaveComposta *chave1 = (const chaveComposta *)a;
     const chaveComposta *chave2 = (const chaveComposta *)b;
 
@@ -67,36 +67,6 @@ int comparar_chave(const void*a, const void*b){
     return 0; //data igual
 
 }
-
-// //callback 
-// size_t tamanho_chave(const void* chave) {
-//     return sizeof(chaveComposta);
-// }
-
-// void escrever_chave(const void* chave, void* buffer) {
-//     memcpy(buffer, chave, sizeof(chaveComposta));
-// }
-
-// void ler_chave(void* destino, const void* buffer) {
-//     memcpy(destino, buffer, sizeof(chaveComposta));
-// }
-
-//precisa??
-// //serializacao funcionario
-
-// void serializar_funcionario(const funcionario* f, void* buffer) {
-//     memcpy(buffer, f, sizeof(funcionario));
-// }
-
-// //desserializacao funcionario
-// void desserializar_funcionario(funcionario* f, const void* buffer) {
-//     memcpy(f, buffer, sizeof(funcionario));
-// }
-
-
-
-
-
 
 int salvar_funcionario(const funcionario *f, int *posicao)
 {
@@ -181,8 +151,6 @@ void imprimir_funcionario_resumido(const funcionario* f) {
     printf("Status: %s\n", f->contrato.status ? "ATIVO" : "INATIVO");
     printf("----------------------------------------\n");
 }
-
-
 
 void rh_inserir_funcionario() {
 
@@ -424,7 +392,6 @@ void rh_excluir_funcionario() {
     printf("Funcionario removido com sucesso.\n");
 }
 
-
 void rh_buscar_funcionario() {
     char nome[100];
     int posicoes[100];
@@ -493,7 +460,6 @@ void rh_buscar_funcionario() {
         printf("Erro ao carregar dados.\n");
     }
 }
-
 
 void rh_listar_intervalo() {
 
