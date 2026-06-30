@@ -527,9 +527,3 @@ void rh_listar_intervalo() {
     printf("----------------------------------------\n");
 }
     
-
-
-void rh_exibir_estrutura() {
-    printf("\n=== ESTRUTURA DA ARVORE B+ ===\n");
-    bplus_imprimir_estrutura();
-}
