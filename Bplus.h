@@ -22,9 +22,9 @@ typedef struct Pagina{
 Pagina *criaPagina(); // eduardo
 void inicializarPagina(Pagina *pagina, int indice, int tipo); // eduardo
 void destroiPagina(Pagina *p); // eduardo
-void inserirElemento(Pagina *p, const void *chave); // eduardo
+void inserirElemento(Pagina *p, const void *chave, int indice); // eduardo
 void removerElemento(Pagina *p, const void *chave, int (*comparar)(const void*, const void*));
-void verificarOverflow(Pagina *p); // eduardo
+void verificarOverflow(FILE *arquivo, Pagina *p); // eduardo
 void verificarUnderflow(FILE *arquivo, Pagina *pagina);
 void ordenarPaginaFolha(Pagina *p); // eduardo
 int buscarPaginaLivre();
