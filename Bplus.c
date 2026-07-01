@@ -541,20 +541,23 @@ int* buscarChavesIntervalo(const void *chaveMin, const void *chaveMax, int *qtEn
         FILE *arquivo = fopen(arquivoArvore, "rb");
 
     //verifica se abriu
-    if (arquivo == NULL)
+    if (arquivo == NULL){
+        *qtEncontrados = 0;
         return NULL;
-
+    }
     //le cabeçalho
 
     Cabecalho header;
 
     if (fread(&header, sizeof(Cabecalho), 1, arquivo) != 1){
+        *qtEncontrados=0;
         fclose(arquivo);
         return NULL;
     }
 
     //verifica se a árvore existe
     if (header.raiz == -1){
+        *qtEncontrados = 0;
         fclose(arquivo);
         return NULL;
     }
@@ -687,11 +690,13 @@ void deletarChaveNaArvore(const void *chave, int (*comparar)(const void *, const
     Pagina pagina = buscarFolha(&header, chave, comparar);
 
     // tenta remover
-    if (!removerElementoDaPagina(&pagina, chave, comparar)){
+    if (removerElementoDaPagina(&pagina, chave, comparar)==-1){
         printf("Chave não encontrada.\n");
         fclose(arquivo);
         return;
     }
+    //libera chave (tratamento de erro)
+    free((void*)chave);
 
     // corrige underflow (pode modificar outras páginas recursivamente)
     verificarUnderflow(arquivo, &pagina, comparar);

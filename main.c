@@ -11,7 +11,6 @@ int main(){
     inicializarArvore(ORDEM, sizeof(chaveComposta));
 
     int opcao;
-    int executando = 1;
 
     do{
         printf("\n========================================\n");

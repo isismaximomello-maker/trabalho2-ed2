@@ -45,7 +45,7 @@ typedef struct funcionario {
 
 // ============ FUNÇÕES DE CRIAÇÃO ============
 
-funcionario* criar_funcionario(char* nome, int dia, int mes, int ano, char* mae, char* pai, char* endereco, char* telefone);
+funcionario* criar_funcionario(char* nome, int dia, int mes, int ano, char* mae, char* pai ,char*endereco, char* telefone);
 
 // ============ FUNÇÕES DE CALLBACK ============
 
