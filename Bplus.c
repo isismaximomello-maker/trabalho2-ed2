@@ -47,6 +47,30 @@ void ordenarPaginaFolha(Pagina *p, int (*comparar)(const void *, const void *)) 
     }
 }
 
+void ordenarPaginaInterna(Pagina *p, int (*comparar)(const void *, const void *)){
+
+    for(int i = 1; i < p->qtElementos; i++){
+
+        void *chaveAux = p->chave[i];
+        int filhoDireitaAux = p->filho[i + 1];
+
+        int j = i;
+
+        while(j > 0 && comparar(chaveAux, p->chave[j - 1]) < 0){
+
+            p->chave[j] = p->chave[j - 1];
+
+            // desloca somente o filho da direita correspondente
+            p->filho[j + 1] = p->filho[j];
+
+            j--;
+        }
+
+        p->chave[j] = chaveAux;
+        p->filho[j + 1] = filhoDireitaAux;
+    }
+}
+
 //inserção e remoção
 void inserirElementoNaPagina(Pagina *p, const void* chave, int indice, int (*comparar)(const void *, const void *)){
 
@@ -56,7 +80,10 @@ void inserirElementoNaPagina(Pagina *p, const void* chave, int indice, int (*com
     p->qtElementos++;
     
     // Ordena a página na RAM
-    ordenarPaginaFolha(p, comparar);
+    if (p->ehfolha)
+        ordenarPaginaFolha(p, comparar);
+    else
+        ordenarPaginaInterna(p, comparar);
 
     // Verifica e trata o overflow (cisão) inteiramente na memória RAM
     verificarOverflow(p, comparar);
@@ -126,7 +153,7 @@ int buscarPaginaLivre(){
 }
 
 //verificações (over, under, redistrib, concatenação)
-int redistribuir(FILE *arquivo, Pagina *pagina, Pagina *pai, int pos, int minimo){
+int redistribuir(FILE *arquivo, Pagina *pagina, Pagina *pai, int pos, int minimo, int (*comparar)(const void*, const void*)){
 
     Pagina irma;
 
@@ -147,6 +174,12 @@ int redistribuir(FILE *arquivo, Pagina *pagina, Pagina *pai, int pos, int minimo
             pagina->filho[0] = irma.filho[irma.qtElementos-1];
 
             pagina->qtElementos++;
+
+            if (pagina->ehfolha)
+                ordenarPaginaFolha(pagina, comparar);
+            else
+                ordenarPaginaInterna(pagina, comparar);
+
             irma.qtElementos--;
 
             fseek(arquivo, sizeof(Cabecalho)+irma.indice*sizeof(Pagina), SEEK_SET);
@@ -185,7 +218,7 @@ int redistribuir(FILE *arquivo, Pagina *pagina, Pagina *pai, int pos, int minimo
     return 0;
 }
 
-void concatenar(FILE *arquivo, Pagina *pagina, Pagina *pai, int pos){
+void concatenar(FILE *arquivo, Pagina *pagina, Pagina *pai, int pos, int (*comparar)(const void*, const void*)){
 
     Pagina irma;
 
@@ -213,11 +246,11 @@ void concatenar(FILE *arquivo, Pagina *pagina, Pagina *pai, int pos){
 
         pai->qtElementos--;
 
-        verificarUnderflow(arquivo,pai);
+        verificarUnderflow(arquivo,pai,comparar);
     }
 }
 
-void verificarUnderflow(FILE *arquivo, Pagina *pagina){
+void verificarUnderflow(FILE *arquivo, Pagina *pagina, int (*comparar)(const void*, const void*)){
 
     Cabecalho header;
 
@@ -252,10 +285,10 @@ void verificarUnderflow(FILE *arquivo, Pagina *pagina){
     while(pai.filho[pos]!=pagina->indice)
         pos++;
 
-    if(redistribuir(arquivo,pagina,&pai,pos,minimo))
+    if(redistribuir(arquivo,pagina,&pai,pos,minimo,comparar))
         return;
 
-    concatenar(arquivo,pagina,&pai,pos);
+    concatenar(arquivo,pagina,&pai,pos,comparar);
 }
 
 void verificarOverflow(Pagina *p, int (*comparar)(const void *, const void *)){
@@ -659,7 +692,7 @@ void deletarChaveNaArvore(const void *chave, int (*comparar)(const void *, const
     }
 
     // corrige underflow (pode modificar outras páginas recursivamente)
-    verificarUnderflow(arquivo, &pagina);
+    verificarUnderflow(arquivo, &pagina, comparar);
 
     // salva a página onde ocorreu a remoção
     fseek(arquivo, sizeof(Cabecalho) + pagina.indice * sizeof(Pagina), SEEK_SET);

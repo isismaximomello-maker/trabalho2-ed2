@@ -47,6 +47,9 @@ void destroiPagina(Pagina *p);
 // Ordena os elementos de uma página folha usando insertion sort (função de comparação genérica)
 void ordenarPaginaFolha(Pagina *p, int (*comparar)(const void *, const void *));
 
+// Ordena os elementos de uma página interna usando insertion sort (função de comparação genérica)
+void ordenarPaginaInterna(Pagina *p, int (*comparar)(const void *, const void *));
+
 // Insere uma chave e seu índice (registro/filho) na página, mantendo ordem e tratando overflow
 void inserirElementoNaPagina(Pagina *p, const void* chave, int indice, int (*comparar)(const void *, const void *));
 
@@ -58,13 +61,13 @@ int removerElementoDaPagina(Pagina *p, const void *chave, int (*comparar)(const 
    ============================================================ */
 
 // Tenta redistribuir chaves entre a página e uma irmã (esquerda ou direita) para evitar underflow
-int redistribuir(FILE *arquivo, Pagina *pagina, Pagina *pai, int pos, int minimo);
+int redistribuir(FILE *arquivo, Pagina *pagina, Pagina *pai, int pos, int minimo, int (*comparar)(const void *, const void *));
 
 // Concatena a página com uma irmã (quando redistribuição não é possível)
-void concatenar(FILE *arquivo, Pagina *pagina, Pagina *pai, int pos);
+void concatenar(FILE *arquivo, Pagina *pagina, Pagina *pai, int pos, int (*comparar)(const void*, const void*));
 
 // Verifica se uma página está com underflow e aciona redistribuição ou concatenação
-void verificarUnderflow(FILE *arquivo, Pagina *pagina);
+void verificarUnderflow(FILE *arquivo, Pagina *pagina, int (*comparar)(const void*, const void*));
 
 // Verifica se uma página está com overflow e realiza a cisão (split), propagando a chave mediana
 void verificarOverflow(Pagina *p, int (*comparar)(const void *, const void *));
