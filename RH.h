@@ -59,7 +59,7 @@ void atualizar_funcionario(funcionario *f, int posicao);
 
 // ============ FUNÇÕES DE IMPRESSÃO ============
 
-void imprimir_funcionario(const funcionario* f);
+void imprimir_funcionario(const funcionario* f,int opcao);
 void imprimir_funcionario_resumido(const funcionario* f);
 
 // ============ FUNÇÕES DO SISTEMA RH ============
