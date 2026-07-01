@@ -592,3 +592,9 @@ void rh_listar_intervalo() {
     free(posicoes);
     printf("----------------------------------------\n");
 }
+
+
+
+
+//IMPRIMIR ARVORE 
+void imprimirArvore();

@@ -1,57 +1,18 @@
-/*
- * ============================================================
- * ARQUIVO: main.c
- * ============================================================
- * 
- * PROGRAMA PRINCIPAL – MENU INTERATIVO DO SISTEMA DE RH
- * 
- * ------------------------------------------------------------
- * PASSO 1 – INICIALIZAÇÃO DO SISTEMA
- * ------------------------------------------------------------
- * 1.1. Abrir / criar o arquivo de índice da B+ Tree (bplus_init).
- * 1.2. Registrar os callbacks (comparador, tamanho, serialização).
- * 1.3. Carregar eventuais dados persistentes (se houver arquivo de dados).
- * 
- * ------------------------------------------------------------
- * PASSO 2 – LOOP PRINCIPAL DO MENU
- * ------------------------------------------------------------
- * 2.1. Exibir opções numeradas (1 a 6).
- * 2.2. Ler a opção do usuário.
- * 2.3. Switch para cada opção.
- * 
- * ------------------------------------------------------------
- * PASSO 3 – IMPLEMENTAÇÃO DOS CASES
- * ------------------------------------------------------------
- * 3.1. Case 1: chamar rh_inserir_funcionario().
- * 3.2. Case 2: chamar rh_buscar_funcionario().
- * 3.3. Case 3: chamar rh_excluir_funcionario().
- * 3.4. Case 4: chamar rh_listar_por_intervalo().
- * 3.5. Case 5: chamar bplus_print_tree() – exibe estrutura hierárquica.
- * 3.6. Case 6: encerrar (break do loop).
- * 
- * ------------------------------------------------------------
- * PASSO 4 – FINALIZAÇÃO SEGURA (OPÇÃO SAIR)
- * ------------------------------------------------------------
- * 4.1. Escrever cabeçalho atualizado.
- * 4.2. Fechar arquivos (bplus_close).
- * 4.3. Liberar memória alocada (se houver).
- * 4.4. Exibir mensagem de encerramento.
- * 
- * ------------------------------------------------------------
- * PASSO 5 – TRATAMENTO DE ERROS E ENTRADAS INVÁLIDAS
- * ------------------------------------------------------------
- * 5.1. Validar opções fora do intervalo.
- * 5.2. Limpar buffer do teclado após leituras.
- * 5.3. Capturar interrupções (SIGINT) para não corromper arquivos.
- */
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "RH.h"
+#include "Bplus.h"
 
 int main(){
 
+    inicializarArvore(ORDEM, sizeof(chaveComposta));
+
     int opcao;
+    int executando = 1;
+
     do{
         printf("\n========================================\n");
         printf("  MENU PRINCIPAL\n");
@@ -65,32 +26,41 @@ int main(){
         printf("========================================\n");
         
         printf("\nEscolha uma opcao: ");
-        scanf("%d", &opcao);
-        int c;
-        while ((c = getchar()) != '\n' && c != EOF) {
+        if (scanf("%d", &opcao) != 1) {
+            // Entrada inválida (não numérica)
+            printf("Entrada invalida. Digite um numero.\n");
+            // Limpa o buffer
+            while (getchar() != '\n');
+            continue;
+        }
+
+        // Limpa o buffer do teclado
+        while (getchar() != '\n');
+
 
 
         switch (opcao)
         {
             case 1:
-            
+                rh_inserir_funcionario();
                 break;
             
             case 2:
-            
+                rh_buscar_funcionario();
                 break;
             case 3:
-            
+                rh_excluir_funcionario();
                 break;
             case 4:
-            
+                rh_listar_intervalo();
                 break;
             case 5:
-            
+                imprimirArvore();
                 break;
 
             case 6:
-            return false;
+                printf("\n Encerrando o programa.");
+                return false;
             
             default:
                 printf("Opção indisponivel\n");
@@ -101,5 +71,4 @@ int main(){
 
 
     return 0;
-    }
 }
