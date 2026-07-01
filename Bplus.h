@@ -31,7 +31,7 @@ void ordenarPaginaFolha(Pagina *p, int (*comparar)(const void *, const void *));
 int buscarPaginaLivre();
 
 // funções para a árvore
-void inicializarArvore(int ordem, int tamChave, int (*comparar)(const void*, const void*));
+void inicializarArvore(int ordem, int tamChave);
 void imprimirArvore();
 int buscarChave(const void *chave, int (*comparar)(const void*, const void*));
 void inserirChave(const void *chave, int enderecoRegistro);
