@@ -217,7 +217,7 @@ void atualizar_funcionario(funcionario *f, int posicao){
         if (opcaoMes >= 1 && opcaoMes <= 12) {
             printf("Digite o valor do pagamento: ");
             scanf("%lf", &f->historicoPagamentos[opcaoMes-1]);
-            limpar_buffer();
+
         } else {
             printf("Mes invalido! Operacao de pagamento cancelada.\n");
         }
