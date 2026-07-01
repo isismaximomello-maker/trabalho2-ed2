@@ -51,6 +51,16 @@ int compararPorChaveComposta(const void*a, const void*b){
     const chaveComposta *chave1 = (const chaveComposta *)a;
     const chaveComposta *chave2 = (const chaveComposta *)b;
 
+    // Substitua temporariamente o seu código por isso para testar:
+    printf("[DEBUG] Endereço Chave 1: %p, Endereço Chave 2: %p\n", (void*)chave1->nome, (void*)chave2->nome);
+
+    if (chave1->nome == NULL || chave2->nome == NULL) {
+        printf("[DEBUG] ERRO: Uma das estruturas de chave é NULL!\n");
+    } else {
+        printf("[DEBUG] String 1 (Camila?): %s\n", chave1->nome ? chave1->nome : "NULL");
+        printf("[DEBUG] String 2 (Do arquivo?): %s\n", chave2->nome ? chave2->nome : "NULL");
+    }
+
     int compararNome = strcmp(chave1->nome,chave2->nome);
 
     if (compararNome != 0) return compararNome; 

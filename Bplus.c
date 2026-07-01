@@ -108,7 +108,7 @@ int removerElementoDaPagina(Pagina *p, const void *chave, int (*comparar)(const 
 
     // procura a chave na página
     for(int i = 0; i < p->qtElementos; i++){
-        if(comparar(chave, p->chave[i]) == 0){
+        if(comparar(chave, &p->chave[i]) == 0){
             pos = i;
             break;
         }
@@ -483,7 +483,7 @@ Pagina buscarFolha(Cabecalho *header, const void *chave, int (*comparar)(const v
         int i = 0;
 
         // Descobre qual filho seguir
-        while (i < pagina.qtElementos && comparar(chave, pagina.chave[i]) > 0) i++;
+        while (i < pagina.qtElementos && comparar(chave, &pagina.chave[i]) > 0) i++;
         
         // Carrega o filho escolhido
         fseek(arquivo, sizeof(Cabecalho) + pagina.filho[i] * sizeof(Pagina), SEEK_SET);
@@ -509,7 +509,6 @@ int buscarChaveNaArvore(const void* chave, int *enderecoRegistro, int (*comparar
         return -1;
     }
 
-
     if (header.raiz == -1){
         printf("Árvore vazia!!\n");
         fclose(arquivo);
@@ -522,7 +521,7 @@ int buscarChaveNaArvore(const void* chave, int *enderecoRegistro, int (*comparar
     // procura a chave na folha
     for (int i = 0; i < p.qtElementos; i++){
 
-        if (comparar(chave, p.chave[i]) == 0){
+        if (comparar(chave, &p.chave[i]) == 0){
 
             *enderecoRegistro = p.filho[i];
 
@@ -578,13 +577,13 @@ int* buscarChavesIntervalo(const void *chaveMin, const void *chaveMax, int *qtEn
         for (int i = 0; i < pagina.qtElementos; i++){
 
             //se a chave encontrada for maior que a máxima, encerra pois já terminou o intervalo
-            if (comparar(pagina.chave[i], chaveMax) > 0){
+            if (comparar(&pagina.chave[i], chaveMax) > 0){
                 terminou = true;
                 break;
             }
 
             //se está no intervalo, compara com a minima
-            if (comparar(pagina.chave[i], chaveMin) >= 0){
+            if (comparar(&pagina.chave[i], chaveMin) >= 0){
                 //se a chave a página estiver entro do intervalo (chaveMin, chaveMax)
 
                 //verifica se o vetor tem espaço suficiente
