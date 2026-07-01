@@ -92,6 +92,6 @@ int buscarChaveNaArvore(const void* chave, int *enderecoRegistro, int (*comparar
 int* buscarChavesIntervalo(const void *chaveMin, const void *chaveMax, int *qtEncontrados, int (*comparar)(const void*, const void*));
 
 // Deleta uma determinada chave da árvore
-void deletarChaveNaArvore(const void *chave, int (*comparar)(const void *, const void *))
+void deletarChaveNaArvore(const void *chave, int (*comparar)(const void *, const void *));
 
 #endif
