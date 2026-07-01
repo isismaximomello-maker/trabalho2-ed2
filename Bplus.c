@@ -48,7 +48,7 @@ void ordenarPaginaFolha(Pagina *p, int (*comparar)(const void *, const void *)) 
 }
 
 //inserção e remoção
-void inserirElemento(Pagina *p, const void* chave, int indice, int (*comparar)(const void *, const void *)){
+void inserirElementoNaPagina(Pagina *p, const void* chave, int indice, int (*comparar)(const void *, const void *)){
 
     // Inserção na memória RAM mantendo o ponteiro genérico 
     p->chave[p->qtElementos] = (void*)chave; 
@@ -71,7 +71,7 @@ void inserirElemento(Pagina *p, const void* chave, int indice, int (*comparar)(c
     }
 }
 
-int removerElemento(Pagina *p, const void *chave, int (*comparar)(const void*, const void*)){
+int removerElementoDaPagina(Pagina *p, const void *chave, int (*comparar)(const void*, const void*)){
     int pos = -1;
 
     // procura a chave na página
@@ -579,3 +579,43 @@ int* buscarChavesIntervalo(const void *chaveMin, const void *chaveMax, int *qtEn
 //impressão
 void imprimirArvore();
 
+void deletarChaveNaArvore(const void *chave, int (*comparar)(const void *, const void *)){
+    FILE *arquivo = fopen(arquivoArvore, "rb+");
+
+    if (arquivo == NULL){
+        printf("Erro ao abrir o arquivo da árvore!\n");
+        return;
+    }
+
+    Cabecalho header;
+
+    if (fread(&header, sizeof(Cabecalho), 1, arquivo) != 1){
+        fclose(arquivo);
+        return;
+    }
+
+    if (header.raiz == -1){
+        printf("Árvore vazia!\n");
+        fclose(arquivo);
+        return;
+    }
+
+    // encontra a folha
+    Pagina pagina = buscarFolha(&header, chave, comparar);
+
+    // tenta remover
+    if (!removerElemento(&pagina, chave, comparar)){
+        printf("Chave não encontrada.\n");
+        fclose(arquivo);
+        return;
+    }
+
+    // corrige underflow (pode modificar outras páginas recursivamente)
+    verificarUnderflow(arquivo, &pagina);
+
+    // salva a página onde ocorreu a remoção
+    fseek(arquivo, sizeof(Cabecalho) + pagina.indice * sizeof(Pagina), SEEK_SET);
+    fwrite(&pagina, sizeof(Pagina), 1, arquivo);
+
+    fclose(arquivo);
+}
