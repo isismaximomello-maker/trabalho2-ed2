@@ -161,6 +161,70 @@ void imprimir_funcionario_resumido(const funcionario* f) {
     printf("----------------------------------------\n");
 }
 
+void atualizar_funcionario(funcionario *f, int posicao){
+
+    char buffer[200];
+
+    printf("\n=== ATUALIZACAO ===\n");
+    printf("Pressione ENTER para manter o valor atual.\n\n");
+
+    printf("Nome da Mae (%s): ", f->filiacao.mae);
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = '\0';
+    if (strlen(buffer) > 0)
+        strcpy(f->filiacao.mae, buffer);
+
+    printf("Nome do Pai (%s): ", f->filiacao.pai);
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = '\0';
+    if (strlen(buffer) > 0)
+        strcpy(f->filiacao.pai, buffer);
+
+    printf("Endereco (%s): ", f->contato.endereco);
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = '\0';
+    if (strlen(buffer) > 0)
+        strcpy(f->contato.endereco, buffer);
+
+    printf("Telefone (%s): ", f->contato.telefone);
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = '\0';
+    if (strlen(buffer) > 0)
+        strcpy(f->contato.telefone, buffer);
+
+    printf("Status (1-Ativo / 0-Inativo) [%d]: ", f->contrato.status);
+    scanf("%d", &f->contrato.status);
+    getchar();
+
+    if (f->contrato.status == 0) {
+        printf("Data de desligamento (dd/mm/aaaa): ");
+        scanf("%d/%d/%d",
+            &f->contrato.dataDesligamento.dia,
+            &f->contrato.dataDesligamento.mes,
+            &f->contrato.dataDesligamento.ano);
+        getchar();
+    }
+    char opcao;
+    int opcaoMes;
+    printf("Deseja inserir/atualizar pagamento? s/n");
+    scanf("%c", &opcao);
+    if(opcao == 's'|| opcao == 'S'){
+        printf("Digite o mes do pagamento: (1 a 12) ");
+        scanf("%d",&opcaoMes);
+        printf("Digite o valor do pagamento.");
+        scanf("%lf",f->historicoPagamentos[opcaoMes-1]);
+
+    }
+
+
+    if (salvar_funcionario(f, &posicao))
+        printf("\nFuncionario atualizado com sucesso!\n");
+    else
+        printf("\nErro ao atualizar funcionario.\n");
+
+
+}
+
 void rh_inserir_funcionario() {
 
     char nome[100], mae[100], pai[100], endereco[200], telefone[20];
@@ -197,7 +261,7 @@ void rh_inserir_funcionario() {
         if (carregar_funcionario(&f, posicao)) {
 
             printf("\nFuncionario ja cadastrado!\n");
-            imprimir_funcionario_resumido(&f);
+            imprimir_funcionario(&f);
 
             printf("\nDeseja atualizar os dados? (s/n): ");
 
@@ -208,68 +272,11 @@ void rh_inserir_funcionario() {
             if (resp == 's' || resp == 'S') {
 
                 //ATUALIZA DADOS DO FUNCIONARIO
-                char buffer[200];
-
-                printf("\n=== ATUALIZACAO ===\n");
-                printf("Pressione ENTER para manter o valor atual.\n\n");
-
-                printf("Nome da Mae (%s): ", f.filiacao.mae);
-                fgets(buffer, sizeof(buffer), stdin);
-                buffer[strcspn(buffer, "\n")] = '\0';
-                if (strlen(buffer) > 0)
-                    strcpy(f.filiacao.mae, buffer);
-
-                printf("Nome do Pai (%s): ", f.filiacao.pai);
-                fgets(buffer, sizeof(buffer), stdin);
-                buffer[strcspn(buffer, "\n")] = '\0';
-                if (strlen(buffer) > 0)
-                    strcpy(f.filiacao.pai, buffer);
-
-                printf("Endereco (%s): ", f.contato.endereco);
-                fgets(buffer, sizeof(buffer), stdin);
-                buffer[strcspn(buffer, "\n")] = '\0';
-                if (strlen(buffer) > 0)
-                    strcpy(f.contato.endereco, buffer);
-
-                printf("Telefone (%s): ", f.contato.telefone);
-                fgets(buffer, sizeof(buffer), stdin);
-                buffer[strcspn(buffer, "\n")] = '\0';
-                if (strlen(buffer) > 0)
-                    strcpy(f.contato.telefone, buffer);
-
-                printf("Status (1-Ativo / 0-Inativo) [%d]: ", f.contrato.status);
-                scanf("%d", &f.contrato.status);
-                getchar();
-
-                if (f.contrato.status == 0) {
-                    printf("Data de desligamento (dd/mm/aaaa): ");
-                    scanf("%d/%d/%d",
-                        &f.contrato.dataDesligamento.dia,
-                        &f.contrato.dataDesligamento.mes,
-                        &f.contrato.dataDesligamento.ano);
-                    getchar();
-                }
-                char opcao;
-                int opcaoMes;
-                printf("Deseja inserir/atualizar pagamento? s/n");
-                scanf("%c", &opcao);
-                if(opcao == 's'|| opcao == 'S'){
-                    printf("Digite o mes do pagamento: (1 a 12) ");
-                    scanf("%d",&opcaoMes);
-                    printf("Digite o valor do pagamento.");
-                    scanf("%lf",f.historicoPagamentos[opcaoMes-1]);
-
-                }
-
-
-                if (salvar_funcionario(&f, &posicao))
-                    printf("\nFuncionario atualizado com sucesso!\n");
-                else
-                    printf("\nErro ao atualizar funcionario.\n");
+                atualizar_funcionario(&f,posicao);
+                return;
             }
         }
 
-        return;
     }
 
     // Dados da mãe

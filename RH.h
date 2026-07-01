@@ -55,6 +55,7 @@ int compararPorChaveComposta(const void* a, const void* b);
 
 int salvar_funcionario(const funcionario* f, int* posicao);
 int carregar_funcionario(funcionario* f, int posicao);
+void atualizar_funcionario(funcionario *f, int posicao);
 
 // ============ FUNÇÕES DE IMPRESSÃO ============
 
