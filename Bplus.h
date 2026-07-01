@@ -76,6 +76,8 @@ void verificarOverflow(Pagina *p, int (*comparar)(const void *, const void *));
    CATEGORIA 4: Funções principais da árvore (inicialização, busca, impressão)
    ============================================================ */
 
+void inserirChaveNaArvore(const void *chave, int enderecoRegistro, size_t tamChave, int (*comparar)(const void*, const void*));
+   
 // Inicializa o arquivo da árvore com um cabeçalho (ordem, tamanho da chave, etc.)
 void inicializarArvore(int ordem, int tamChave);
 
