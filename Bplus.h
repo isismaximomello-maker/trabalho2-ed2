@@ -23,18 +23,18 @@ typedef struct Pagina{
 Pagina *criaPagina(); // eduardo
 void inicializarPagina(Pagina *pagina, int indice, int tipo); // eduardo
 void destroiPagina(Pagina *p); // eduardo
-void inserirElemento(Pagina *p, const void *chave, int indice); // eduardo
+void inserirElemento(Pagina *p, const void *chave, int indice, int (*comparar)(const void *, const void *)); // eduardo
 int removerElemento(Pagina *p, const void *chave, int (*comparar)(const void *, const void *));
-void verificarOverflow(Pagina *p); // eduardo
+void verificarOverflow(Pagina *p, int (*comparar)(const void *, const void *) ); // eduardo
 void verificarUnderflow(Pagina *pagina);
-void ordenarPaginaFolha(Pagina *p); // eduardo
+void ordenarPaginaFolha(Pagina *p, int (*comparar)(const void *, const void *)); // eduardo
 int buscarPaginaLivre();
 
 // funções para a árvore
 void inicializarArvore(int ordem, int tamChave, int (*comparar)(const void*, const void*));
 void imprimirArvore();
 int buscarChave(const void *chave, int (*comparar)(const void*, const void*));
-void inserirChave(const void *chave, int resgistro);
+void inserirChave(const void *chave, int enderecoRegistro);
 void deletarChave(const void *chave);
 int* buscarChavesIntervalo(const void *chave_min, const void *chave_max, int *qtEncontrados, int (*comparar)(const void*, const void*));
 
