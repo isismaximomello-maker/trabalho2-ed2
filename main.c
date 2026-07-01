@@ -67,7 +67,7 @@ int main(){
         printf("\nEscolha uma opcao: ");
         scanf("%d", &opcao);
         int c;
-        while ((c = getchar()) != '\n' && c != EOF) {}
+        while ((c = getchar()) != '\n' && c != EOF) {
 
 
         switch (opcao)
@@ -101,4 +101,5 @@ int main(){
 
 
     return 0;
+    }
 }

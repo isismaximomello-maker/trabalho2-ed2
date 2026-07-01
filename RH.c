@@ -139,6 +139,14 @@ void imprimir_funcionario(const funcionario* f) {
                f->contrato.dataDesligamento.mes,
                f->contrato.dataDesligamento.ano);
     }
+
+    printf("Pagamentos: ");
+    printf("[ |");
+    for(int i = 0; i<11;i++){
+        printf("%lf | ", f->historicoPagamentos[i]);
+
+    }
+    printf("]");
     printf("========================================\n");
 }
 
@@ -241,6 +249,18 @@ void rh_inserir_funcionario() {
                         &f.contrato.dataDesligamento.ano);
                     getchar();
                 }
+                char opcao;
+                int opcaoMes;
+                printf("Deseja inserir/atualizar pagamento? s/n");
+                scanf("%c", &opcao);
+                if(opcao == 's'|| opcao == 'S'){
+                    printf("Digite o mes do pagamento: (1 a 12) ");
+                    scanf("%d",&opcaoMes);
+                    printf("Digite o valor do pagamento.");
+                    scanf("%lf",f.historicoPagamentos[opcaoMes-1]);
+
+                }
+
 
                 if (salvar_funcionario(&f, &posicao))
                     printf("\nFuncionario atualizado com sucesso!\n");
